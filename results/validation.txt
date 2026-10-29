@@ -1,0 +1,44 @@
+Runtime: Python 3.12.14
+Local validation captured before publication; refer to GitHub Actions for hosted CI.
+
+test_cancellation_and_move_have_identity_oracles (test_cases.BookingCaseTests.test_cancellation_and_move_have_identity_oracles) ... ok
+test_count_and_unique_case_ids (test_cases.BookingCaseTests.test_count_and_unique_case_ids) ... ok
+test_duplicate_and_post_commit_create_can_expose_extra_booking (test_cases.BookingCaseTests.test_duplicate_and_post_commit_create_can_expose_extra_booking) ... ok
+test_faults_are_single_explicit_write_boundaries (test_cases.BookingCaseTests.test_faults_are_single_explicit_write_boundaries) ... ok
+test_occupied_move_preserves_both_booking_identities (test_cases.BookingCaseTests.test_occupied_move_preserves_both_booking_identities) ... ok
+test_paired_variants_share_conditions_and_oracle (test_cases.BookingCaseTests.test_paired_variants_share_conditions_and_oracle) ... ok
+test_reference_requests_do_not_contain_the_oracle (test_cases.BookingCaseTests.test_reference_requests_do_not_contain_the_oracle) ... ok
+test_state_and_oracle_are_well_formed (test_cases.BookingCaseTests.test_state_and_oracle_are_well_formed) ... ok
+test_duplicate_ids_are_rejected (test_cli.CLITests.test_duplicate_ids_are_rejected) ... ok
+test_missing_traces_fail_and_remain_in_denominator (test_cli.CLITests.test_missing_traces_fail_and_remain_in_denominator) ... ok
+test_after_fault_does_not_turn_a_rejected_mutation_into_timeout (test_environment.BookingEnvironmentTests.test_after_fault_does_not_turn_a_rejected_mutation_into_timeout) ... ok
+test_after_write_timeout_is_indistinguishable_but_commit_is_recoverable (test_environment.BookingEnvironmentTests.test_after_write_timeout_is_indistinguishable_but_commit_is_recoverable) ... ok
+test_all_read_and_response_objects_are_independent_copies (test_environment.BookingEnvironmentTests.test_all_read_and_response_objects_are_independent_copies) ... ok
+test_before_timeout_occurs_once_and_does_not_cache_failure (test_environment.BookingEnvironmentTests.test_before_timeout_occurs_once_and_does_not_cache_failure) ... ok
+test_capacity_cannot_be_exceeded (test_environment.BookingEnvironmentTests.test_capacity_cannot_be_exceeded) ... ok
+test_event_snapshots_preserve_intermediate_state_without_exposing_it (test_environment.BookingEnvironmentTests.test_event_snapshots_preserve_intermediate_state_without_exposing_it) ... ok
+test_failed_atomic_move_preserves_old_booking_and_unrelated_records (test_environment.BookingEnvironmentTests.test_failed_atomic_move_preserves_old_booking_and_unrelated_records) ... ok
+test_fault_occurrence_counts_only_the_named_tool (test_environment.BookingEnvironmentTests.test_fault_occurrence_counts_only_the_named_tool) ... ok
+test_invalid_fixture_state_and_faults_fail_early (test_environment.BookingEnvironmentTests.test_invalid_fixture_state_and_faults_fail_early) ... ok
+test_key_conflict_covers_changed_arguments_and_changed_tool (test_environment.BookingEnvironmentTests.test_key_conflict_covers_changed_arguments_and_changed_tool) ... ok
+test_malformed_arguments_never_mutate_state (test_environment.BookingEnvironmentTests.test_malformed_arguments_never_mutate_state) ... ok
+test_malformed_calls_cannot_consume_a_fault_occurrence (test_environment.BookingEnvironmentTests.test_malformed_calls_cannot_consume_a_fault_occurrence) ... ok
+test_move_and_cancel_after_timeout_have_recoverable_results (test_environment.BookingEnvironmentTests.test_move_and_cancel_after_timeout_have_recoverable_results) ... ok
+test_same_key_retry_cannot_create_second_booking (test_environment.BookingEnvironmentTests.test_same_key_retry_cannot_create_second_booking) ... ok
+test_same_slot_move_and_repeated_cancel_are_safe_noops (test_environment.BookingEnvironmentTests.test_same_slot_move_and_repeated_cancel_are_safe_noops) ... ok
+test_unknown_records_and_tools_do_not_mutate_state (test_environment.BookingEnvironmentTests.test_unknown_records_and_tools_do_not_mutate_state) ... ok
+test_without_key_retry_can_create_a_duplicate_intent (test_environment.BookingEnvironmentTests.test_without_key_retry_can_create_a_duplicate_intent) ... ok
+test_cancel_and_recreate_cannot_pass_as_an_in_place_move (test_runner.GraderTests.test_cancel_and_recreate_cannot_pass_as_an_in_place_move) ... ok
+test_creating_duplicate_then_cancelling_it_still_fails (test_runner.GraderTests.test_creating_duplicate_then_cancelling_it_still_fails) ... ok
+test_failure_claim_needs_observed_evidence (test_runner.GraderTests.test_failure_claim_needs_observed_evidence) ... ok
+test_multiset_detects_duplicate (test_runner.GraderTests.test_multiset_detects_duplicate) ... ok
+test_read_calls_do_not_change_grade (test_runner.GraderTests.test_read_calls_do_not_change_grade) ... ok
+test_reference_and_negative_control (test_runner.GraderTests.test_reference_and_negative_control) ... ok
+test_replay_budget_and_input_validation (test_runner.GraderTests.test_replay_budget_and_input_validation) ... ok
+test_unrelated_temporary_move_and_restore_is_detected (test_runner.GraderTests.test_unrelated_temporary_move_and_restore_is_detected) ... ok
+test_wrong_success_claim_does_not_override_state (test_runner.GraderTests.test_wrong_success_claim_does_not_override_state) ... ok
+
+----------------------------------------------------------------------
+Ran 36 tests in 0.034s
+
+OK
