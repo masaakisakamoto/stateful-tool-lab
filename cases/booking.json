@@ -1,0 +1,1339 @@
+{
+  "metadata": {
+    "schema_version": 1,
+    "name": "Stateful booking controller fixtures",
+    "provenance": "Entirely fictional customers, slots, bookings, instructions and faults. No production data.",
+    "independent_scenarios": 12,
+    "paired_language_variants": 24,
+    "languages": [
+      "ja",
+      "en"
+    ],
+    "purpose": "Offline verification of the booking environment, deterministic reference controllers and state grader.",
+    "request_semantics": "requests is public structured input for reference controllers, not the grading oracle. The expected field is private to the grader.",
+    "limitation": "Controllers consume structured requests rather than interpreting instructions. Language variants therefore do not measure Japanese or English understanding, LLM quality or real-world effectiveness.",
+    "oracle_provenance": "Expected outcomes and active-booking multisets were authored independently of the booking environment.",
+    "duplicate_semantics": "active_bookings is a multiset encoded as a list; duplicate entries must never be deduplicated by the grader.",
+    "identity_semantics": "required_bookings checks preserved identifiers and cancelled rows, so cancel-and-recreate is not equivalent to an atomic move."
+  },
+  "cases": [
+    {
+      "id": "create-clean-ja",
+      "scenario_id": "create-clean",
+      "language": "ja",
+      "instruction": "お客様c1の予約をs1に1件登録してください。重複登録はしないでください。",
+      "initial_state": {
+        "slots": {
+          "s1": {
+            "capacity": 2
+          },
+          "s2": {
+            "capacity": 1
+          },
+          "s3": {
+            "capacity": 1
+          }
+        },
+        "bookings": []
+      },
+      "faults": [],
+      "requests": [
+        {
+          "tool": "create_booking",
+          "arguments": {
+            "customer_id": "c1",
+            "slot_id": "s1"
+          },
+          "operation_id": "op-1"
+        }
+      ],
+      "expected": {
+        "active_bookings": [
+          {
+            "customer_id": "c1",
+            "slot_id": "s1"
+          }
+        ],
+        "outcomes": [
+          "ok"
+        ]
+      }
+    },
+    {
+      "id": "create-clean-en",
+      "scenario_id": "create-clean",
+      "language": "en",
+      "instruction": "Create exactly one booking for customer c1 in slot s1. Do not create duplicates.",
+      "initial_state": {
+        "slots": {
+          "s1": {
+            "capacity": 2
+          },
+          "s2": {
+            "capacity": 1
+          },
+          "s3": {
+            "capacity": 1
+          }
+        },
+        "bookings": []
+      },
+      "faults": [],
+      "requests": [
+        {
+          "tool": "create_booking",
+          "arguments": {
+            "customer_id": "c1",
+            "slot_id": "s1"
+          },
+          "operation_id": "op-1"
+        }
+      ],
+      "expected": {
+        "active_bookings": [
+          {
+            "customer_id": "c1",
+            "slot_id": "s1"
+          }
+        ],
+        "outcomes": [
+          "ok"
+        ]
+      }
+    },
+    {
+      "id": "create-before-timeout-ja",
+      "scenario_id": "create-before-timeout",
+      "language": "ja",
+      "instruction": "お客様c1の予約をs1に1件登録してください。重複登録はしないでください。",
+      "initial_state": {
+        "slots": {
+          "s1": {
+            "capacity": 2
+          },
+          "s2": {
+            "capacity": 1
+          },
+          "s3": {
+            "capacity": 1
+          }
+        },
+        "bookings": []
+      },
+      "faults": [
+        {
+          "tool": "create_booking",
+          "phase": "before",
+          "occurrence": 1
+        }
+      ],
+      "requests": [
+        {
+          "tool": "create_booking",
+          "arguments": {
+            "customer_id": "c1",
+            "slot_id": "s1"
+          },
+          "operation_id": "op-1"
+        }
+      ],
+      "expected": {
+        "active_bookings": [
+          {
+            "customer_id": "c1",
+            "slot_id": "s1"
+          }
+        ],
+        "outcomes": [
+          "ok"
+        ]
+      }
+    },
+    {
+      "id": "create-before-timeout-en",
+      "scenario_id": "create-before-timeout",
+      "language": "en",
+      "instruction": "Create exactly one booking for customer c1 in slot s1. Do not create duplicates.",
+      "initial_state": {
+        "slots": {
+          "s1": {
+            "capacity": 2
+          },
+          "s2": {
+            "capacity": 1
+          },
+          "s3": {
+            "capacity": 1
+          }
+        },
+        "bookings": []
+      },
+      "faults": [
+        {
+          "tool": "create_booking",
+          "phase": "before",
+          "occurrence": 1
+        }
+      ],
+      "requests": [
+        {
+          "tool": "create_booking",
+          "arguments": {
+            "customer_id": "c1",
+            "slot_id": "s1"
+          },
+          "operation_id": "op-1"
+        }
+      ],
+      "expected": {
+        "active_bookings": [
+          {
+            "customer_id": "c1",
+            "slot_id": "s1"
+          }
+        ],
+        "outcomes": [
+          "ok"
+        ]
+      }
+    },
+    {
+      "id": "create-after-timeout-ja",
+      "scenario_id": "create-after-timeout",
+      "language": "ja",
+      "instruction": "お客様c1の予約をs1に1件登録してください。重複登録はしないでください。",
+      "initial_state": {
+        "slots": {
+          "s1": {
+            "capacity": 2
+          },
+          "s2": {
+            "capacity": 1
+          },
+          "s3": {
+            "capacity": 1
+          }
+        },
+        "bookings": []
+      },
+      "faults": [
+        {
+          "tool": "create_booking",
+          "phase": "after",
+          "occurrence": 1
+        }
+      ],
+      "requests": [
+        {
+          "tool": "create_booking",
+          "arguments": {
+            "customer_id": "c1",
+            "slot_id": "s1"
+          },
+          "operation_id": "op-1"
+        }
+      ],
+      "expected": {
+        "active_bookings": [
+          {
+            "customer_id": "c1",
+            "slot_id": "s1"
+          }
+        ],
+        "outcomes": [
+          "ok"
+        ]
+      }
+    },
+    {
+      "id": "create-after-timeout-en",
+      "scenario_id": "create-after-timeout",
+      "language": "en",
+      "instruction": "Create exactly one booking for customer c1 in slot s1. Do not create duplicates.",
+      "initial_state": {
+        "slots": {
+          "s1": {
+            "capacity": 2
+          },
+          "s2": {
+            "capacity": 1
+          },
+          "s3": {
+            "capacity": 1
+          }
+        },
+        "bookings": []
+      },
+      "faults": [
+        {
+          "tool": "create_booking",
+          "phase": "after",
+          "occurrence": 1
+        }
+      ],
+      "requests": [
+        {
+          "tool": "create_booking",
+          "arguments": {
+            "customer_id": "c1",
+            "slot_id": "s1"
+          },
+          "operation_id": "op-1"
+        }
+      ],
+      "expected": {
+        "active_bookings": [
+          {
+            "customer_id": "c1",
+            "slot_id": "s1"
+          }
+        ],
+        "outcomes": [
+          "ok"
+        ]
+      }
+    },
+    {
+      "id": "cancel-clean-ja",
+      "scenario_id": "cancel-clean",
+      "language": "ja",
+      "instruction": "予約b001をキャンセルしてください。ほかの予約は変更しないでください。",
+      "initial_state": {
+        "slots": {
+          "s1": {
+            "capacity": 2
+          },
+          "s2": {
+            "capacity": 1
+          },
+          "s3": {
+            "capacity": 1
+          }
+        },
+        "bookings": [
+          {
+            "id": "b001",
+            "customer_id": "c1",
+            "slot_id": "s1",
+            "status": "active"
+          }
+        ]
+      },
+      "faults": [],
+      "requests": [
+        {
+          "tool": "cancel_booking",
+          "arguments": {
+            "booking_id": "b001"
+          },
+          "operation_id": "op-1"
+        }
+      ],
+      "expected": {
+        "active_bookings": [],
+        "outcomes": [
+          "ok"
+        ],
+        "required_bookings": [
+          {
+            "id": "b001",
+            "customer_id": "c1",
+            "slot_id": "s1",
+            "status": "cancelled"
+          }
+        ]
+      }
+    },
+    {
+      "id": "cancel-clean-en",
+      "scenario_id": "cancel-clean",
+      "language": "en",
+      "instruction": "Cancel booking b001. Do not change any other booking.",
+      "initial_state": {
+        "slots": {
+          "s1": {
+            "capacity": 2
+          },
+          "s2": {
+            "capacity": 1
+          },
+          "s3": {
+            "capacity": 1
+          }
+        },
+        "bookings": [
+          {
+            "id": "b001",
+            "customer_id": "c1",
+            "slot_id": "s1",
+            "status": "active"
+          }
+        ]
+      },
+      "faults": [],
+      "requests": [
+        {
+          "tool": "cancel_booking",
+          "arguments": {
+            "booking_id": "b001"
+          },
+          "operation_id": "op-1"
+        }
+      ],
+      "expected": {
+        "active_bookings": [],
+        "outcomes": [
+          "ok"
+        ],
+        "required_bookings": [
+          {
+            "id": "b001",
+            "customer_id": "c1",
+            "slot_id": "s1",
+            "status": "cancelled"
+          }
+        ]
+      }
+    },
+    {
+      "id": "cancel-before-timeout-ja",
+      "scenario_id": "cancel-before-timeout",
+      "language": "ja",
+      "instruction": "予約b001をキャンセルしてください。ほかの予約は変更しないでください。",
+      "initial_state": {
+        "slots": {
+          "s1": {
+            "capacity": 2
+          },
+          "s2": {
+            "capacity": 1
+          },
+          "s3": {
+            "capacity": 1
+          }
+        },
+        "bookings": [
+          {
+            "id": "b001",
+            "customer_id": "c1",
+            "slot_id": "s1",
+            "status": "active"
+          }
+        ]
+      },
+      "faults": [
+        {
+          "tool": "cancel_booking",
+          "phase": "before",
+          "occurrence": 1
+        }
+      ],
+      "requests": [
+        {
+          "tool": "cancel_booking",
+          "arguments": {
+            "booking_id": "b001"
+          },
+          "operation_id": "op-1"
+        }
+      ],
+      "expected": {
+        "active_bookings": [],
+        "outcomes": [
+          "ok"
+        ],
+        "required_bookings": [
+          {
+            "id": "b001",
+            "customer_id": "c1",
+            "slot_id": "s1",
+            "status": "cancelled"
+          }
+        ]
+      }
+    },
+    {
+      "id": "cancel-before-timeout-en",
+      "scenario_id": "cancel-before-timeout",
+      "language": "en",
+      "instruction": "Cancel booking b001. Do not change any other booking.",
+      "initial_state": {
+        "slots": {
+          "s1": {
+            "capacity": 2
+          },
+          "s2": {
+            "capacity": 1
+          },
+          "s3": {
+            "capacity": 1
+          }
+        },
+        "bookings": [
+          {
+            "id": "b001",
+            "customer_id": "c1",
+            "slot_id": "s1",
+            "status": "active"
+          }
+        ]
+      },
+      "faults": [
+        {
+          "tool": "cancel_booking",
+          "phase": "before",
+          "occurrence": 1
+        }
+      ],
+      "requests": [
+        {
+          "tool": "cancel_booking",
+          "arguments": {
+            "booking_id": "b001"
+          },
+          "operation_id": "op-1"
+        }
+      ],
+      "expected": {
+        "active_bookings": [],
+        "outcomes": [
+          "ok"
+        ],
+        "required_bookings": [
+          {
+            "id": "b001",
+            "customer_id": "c1",
+            "slot_id": "s1",
+            "status": "cancelled"
+          }
+        ]
+      }
+    },
+    {
+      "id": "cancel-after-timeout-ja",
+      "scenario_id": "cancel-after-timeout",
+      "language": "ja",
+      "instruction": "予約b001をキャンセルしてください。ほかの予約は変更しないでください。",
+      "initial_state": {
+        "slots": {
+          "s1": {
+            "capacity": 2
+          },
+          "s2": {
+            "capacity": 1
+          },
+          "s3": {
+            "capacity": 1
+          }
+        },
+        "bookings": [
+          {
+            "id": "b001",
+            "customer_id": "c1",
+            "slot_id": "s1",
+            "status": "active"
+          }
+        ]
+      },
+      "faults": [
+        {
+          "tool": "cancel_booking",
+          "phase": "after",
+          "occurrence": 1
+        }
+      ],
+      "requests": [
+        {
+          "tool": "cancel_booking",
+          "arguments": {
+            "booking_id": "b001"
+          },
+          "operation_id": "op-1"
+        }
+      ],
+      "expected": {
+        "active_bookings": [],
+        "outcomes": [
+          "ok"
+        ],
+        "required_bookings": [
+          {
+            "id": "b001",
+            "customer_id": "c1",
+            "slot_id": "s1",
+            "status": "cancelled"
+          }
+        ]
+      }
+    },
+    {
+      "id": "cancel-after-timeout-en",
+      "scenario_id": "cancel-after-timeout",
+      "language": "en",
+      "instruction": "Cancel booking b001. Do not change any other booking.",
+      "initial_state": {
+        "slots": {
+          "s1": {
+            "capacity": 2
+          },
+          "s2": {
+            "capacity": 1
+          },
+          "s3": {
+            "capacity": 1
+          }
+        },
+        "bookings": [
+          {
+            "id": "b001",
+            "customer_id": "c1",
+            "slot_id": "s1",
+            "status": "active"
+          }
+        ]
+      },
+      "faults": [
+        {
+          "tool": "cancel_booking",
+          "phase": "after",
+          "occurrence": 1
+        }
+      ],
+      "requests": [
+        {
+          "tool": "cancel_booking",
+          "arguments": {
+            "booking_id": "b001"
+          },
+          "operation_id": "op-1"
+        }
+      ],
+      "expected": {
+        "active_bookings": [],
+        "outcomes": [
+          "ok"
+        ],
+        "required_bookings": [
+          {
+            "id": "b001",
+            "customer_id": "c1",
+            "slot_id": "s1",
+            "status": "cancelled"
+          }
+        ]
+      }
+    },
+    {
+      "id": "move-clean-ja",
+      "scenario_id": "move-clean",
+      "language": "ja",
+      "instruction": "予約b001をs3へ変更してください。変更できない場合は元の予約を残してください。",
+      "initial_state": {
+        "slots": {
+          "s1": {
+            "capacity": 2
+          },
+          "s2": {
+            "capacity": 1
+          },
+          "s3": {
+            "capacity": 1
+          }
+        },
+        "bookings": [
+          {
+            "id": "b001",
+            "customer_id": "c1",
+            "slot_id": "s1",
+            "status": "active"
+          }
+        ]
+      },
+      "faults": [],
+      "requests": [
+        {
+          "tool": "move_booking",
+          "arguments": {
+            "booking_id": "b001",
+            "slot_id": "s3"
+          },
+          "operation_id": "op-1"
+        }
+      ],
+      "expected": {
+        "active_bookings": [
+          {
+            "customer_id": "c1",
+            "slot_id": "s3"
+          }
+        ],
+        "outcomes": [
+          "ok"
+        ],
+        "required_bookings": [
+          {
+            "id": "b001",
+            "customer_id": "c1",
+            "slot_id": "s3",
+            "status": "active"
+          }
+        ]
+      }
+    },
+    {
+      "id": "move-clean-en",
+      "scenario_id": "move-clean",
+      "language": "en",
+      "instruction": "Move booking b001 to slot s3. Keep the original booking if the move cannot be completed.",
+      "initial_state": {
+        "slots": {
+          "s1": {
+            "capacity": 2
+          },
+          "s2": {
+            "capacity": 1
+          },
+          "s3": {
+            "capacity": 1
+          }
+        },
+        "bookings": [
+          {
+            "id": "b001",
+            "customer_id": "c1",
+            "slot_id": "s1",
+            "status": "active"
+          }
+        ]
+      },
+      "faults": [],
+      "requests": [
+        {
+          "tool": "move_booking",
+          "arguments": {
+            "booking_id": "b001",
+            "slot_id": "s3"
+          },
+          "operation_id": "op-1"
+        }
+      ],
+      "expected": {
+        "active_bookings": [
+          {
+            "customer_id": "c1",
+            "slot_id": "s3"
+          }
+        ],
+        "outcomes": [
+          "ok"
+        ],
+        "required_bookings": [
+          {
+            "id": "b001",
+            "customer_id": "c1",
+            "slot_id": "s3",
+            "status": "active"
+          }
+        ]
+      }
+    },
+    {
+      "id": "move-before-timeout-ja",
+      "scenario_id": "move-before-timeout",
+      "language": "ja",
+      "instruction": "予約b001をs3へ変更してください。変更できない場合は元の予約を残してください。",
+      "initial_state": {
+        "slots": {
+          "s1": {
+            "capacity": 2
+          },
+          "s2": {
+            "capacity": 1
+          },
+          "s3": {
+            "capacity": 1
+          }
+        },
+        "bookings": [
+          {
+            "id": "b001",
+            "customer_id": "c1",
+            "slot_id": "s1",
+            "status": "active"
+          }
+        ]
+      },
+      "faults": [
+        {
+          "tool": "move_booking",
+          "phase": "before",
+          "occurrence": 1
+        }
+      ],
+      "requests": [
+        {
+          "tool": "move_booking",
+          "arguments": {
+            "booking_id": "b001",
+            "slot_id": "s3"
+          },
+          "operation_id": "op-1"
+        }
+      ],
+      "expected": {
+        "active_bookings": [
+          {
+            "customer_id": "c1",
+            "slot_id": "s3"
+          }
+        ],
+        "outcomes": [
+          "ok"
+        ],
+        "required_bookings": [
+          {
+            "id": "b001",
+            "customer_id": "c1",
+            "slot_id": "s3",
+            "status": "active"
+          }
+        ]
+      }
+    },
+    {
+      "id": "move-before-timeout-en",
+      "scenario_id": "move-before-timeout",
+      "language": "en",
+      "instruction": "Move booking b001 to slot s3. Keep the original booking if the move cannot be completed.",
+      "initial_state": {
+        "slots": {
+          "s1": {
+            "capacity": 2
+          },
+          "s2": {
+            "capacity": 1
+          },
+          "s3": {
+            "capacity": 1
+          }
+        },
+        "bookings": [
+          {
+            "id": "b001",
+            "customer_id": "c1",
+            "slot_id": "s1",
+            "status": "active"
+          }
+        ]
+      },
+      "faults": [
+        {
+          "tool": "move_booking",
+          "phase": "before",
+          "occurrence": 1
+        }
+      ],
+      "requests": [
+        {
+          "tool": "move_booking",
+          "arguments": {
+            "booking_id": "b001",
+            "slot_id": "s3"
+          },
+          "operation_id": "op-1"
+        }
+      ],
+      "expected": {
+        "active_bookings": [
+          {
+            "customer_id": "c1",
+            "slot_id": "s3"
+          }
+        ],
+        "outcomes": [
+          "ok"
+        ],
+        "required_bookings": [
+          {
+            "id": "b001",
+            "customer_id": "c1",
+            "slot_id": "s3",
+            "status": "active"
+          }
+        ]
+      }
+    },
+    {
+      "id": "move-after-timeout-ja",
+      "scenario_id": "move-after-timeout",
+      "language": "ja",
+      "instruction": "予約b001をs3へ変更してください。変更できない場合は元の予約を残してください。",
+      "initial_state": {
+        "slots": {
+          "s1": {
+            "capacity": 2
+          },
+          "s2": {
+            "capacity": 1
+          },
+          "s3": {
+            "capacity": 1
+          }
+        },
+        "bookings": [
+          {
+            "id": "b001",
+            "customer_id": "c1",
+            "slot_id": "s1",
+            "status": "active"
+          }
+        ]
+      },
+      "faults": [
+        {
+          "tool": "move_booking",
+          "phase": "after",
+          "occurrence": 1
+        }
+      ],
+      "requests": [
+        {
+          "tool": "move_booking",
+          "arguments": {
+            "booking_id": "b001",
+            "slot_id": "s3"
+          },
+          "operation_id": "op-1"
+        }
+      ],
+      "expected": {
+        "active_bookings": [
+          {
+            "customer_id": "c1",
+            "slot_id": "s3"
+          }
+        ],
+        "outcomes": [
+          "ok"
+        ],
+        "required_bookings": [
+          {
+            "id": "b001",
+            "customer_id": "c1",
+            "slot_id": "s3",
+            "status": "active"
+          }
+        ]
+      }
+    },
+    {
+      "id": "move-after-timeout-en",
+      "scenario_id": "move-after-timeout",
+      "language": "en",
+      "instruction": "Move booking b001 to slot s3. Keep the original booking if the move cannot be completed.",
+      "initial_state": {
+        "slots": {
+          "s1": {
+            "capacity": 2
+          },
+          "s2": {
+            "capacity": 1
+          },
+          "s3": {
+            "capacity": 1
+          }
+        },
+        "bookings": [
+          {
+            "id": "b001",
+            "customer_id": "c1",
+            "slot_id": "s1",
+            "status": "active"
+          }
+        ]
+      },
+      "faults": [
+        {
+          "tool": "move_booking",
+          "phase": "after",
+          "occurrence": 1
+        }
+      ],
+      "requests": [
+        {
+          "tool": "move_booking",
+          "arguments": {
+            "booking_id": "b001",
+            "slot_id": "s3"
+          },
+          "operation_id": "op-1"
+        }
+      ],
+      "expected": {
+        "active_bookings": [
+          {
+            "customer_id": "c1",
+            "slot_id": "s3"
+          }
+        ],
+        "outcomes": [
+          "ok"
+        ],
+        "required_bookings": [
+          {
+            "id": "b001",
+            "customer_id": "c1",
+            "slot_id": "s3",
+            "status": "active"
+          }
+        ]
+      }
+    },
+    {
+      "id": "create-occupied-ja",
+      "scenario_id": "create-occupied",
+      "language": "ja",
+      "instruction": "お客様c1の予約をs2に1件登録してください。満席の場合は登録せず、その結果を返してください。",
+      "initial_state": {
+        "slots": {
+          "s1": {
+            "capacity": 2
+          },
+          "s2": {
+            "capacity": 1
+          },
+          "s3": {
+            "capacity": 1
+          }
+        },
+        "bookings": [
+          {
+            "id": "b001",
+            "customer_id": "c2",
+            "slot_id": "s2",
+            "status": "active"
+          }
+        ]
+      },
+      "faults": [],
+      "requests": [
+        {
+          "tool": "create_booking",
+          "arguments": {
+            "customer_id": "c1",
+            "slot_id": "s2"
+          },
+          "operation_id": "op-1"
+        }
+      ],
+      "expected": {
+        "active_bookings": [
+          {
+            "customer_id": "c2",
+            "slot_id": "s2"
+          }
+        ],
+        "outcomes": [
+          "capacity"
+        ]
+      }
+    },
+    {
+      "id": "create-occupied-en",
+      "scenario_id": "create-occupied",
+      "language": "en",
+      "instruction": "Create one booking for customer c1 in slot s2. If it is full, make no booking and report the result.",
+      "initial_state": {
+        "slots": {
+          "s1": {
+            "capacity": 2
+          },
+          "s2": {
+            "capacity": 1
+          },
+          "s3": {
+            "capacity": 1
+          }
+        },
+        "bookings": [
+          {
+            "id": "b001",
+            "customer_id": "c2",
+            "slot_id": "s2",
+            "status": "active"
+          }
+        ]
+      },
+      "faults": [],
+      "requests": [
+        {
+          "tool": "create_booking",
+          "arguments": {
+            "customer_id": "c1",
+            "slot_id": "s2"
+          },
+          "operation_id": "op-1"
+        }
+      ],
+      "expected": {
+        "active_bookings": [
+          {
+            "customer_id": "c2",
+            "slot_id": "s2"
+          }
+        ],
+        "outcomes": [
+          "capacity"
+        ]
+      }
+    },
+    {
+      "id": "move-occupied-ja",
+      "scenario_id": "move-occupied",
+      "language": "ja",
+      "instruction": "予約b001をs2へ変更してください。満席の場合は元の予約と他のお客様の予約を残し、その結果を返してください。",
+      "initial_state": {
+        "slots": {
+          "s1": {
+            "capacity": 2
+          },
+          "s2": {
+            "capacity": 1
+          },
+          "s3": {
+            "capacity": 1
+          }
+        },
+        "bookings": [
+          {
+            "id": "b001",
+            "customer_id": "c1",
+            "slot_id": "s1",
+            "status": "active"
+          },
+          {
+            "id": "b002",
+            "customer_id": "c2",
+            "slot_id": "s2",
+            "status": "active"
+          }
+        ]
+      },
+      "faults": [],
+      "requests": [
+        {
+          "tool": "move_booking",
+          "arguments": {
+            "booking_id": "b001",
+            "slot_id": "s2"
+          },
+          "operation_id": "op-1"
+        }
+      ],
+      "expected": {
+        "active_bookings": [
+          {
+            "customer_id": "c1",
+            "slot_id": "s1"
+          },
+          {
+            "customer_id": "c2",
+            "slot_id": "s2"
+          }
+        ],
+        "outcomes": [
+          "capacity"
+        ],
+        "required_bookings": [
+          {
+            "id": "b001",
+            "customer_id": "c1",
+            "slot_id": "s1",
+            "status": "active"
+          },
+          {
+            "id": "b002",
+            "customer_id": "c2",
+            "slot_id": "s2",
+            "status": "active"
+          }
+        ]
+      }
+    },
+    {
+      "id": "move-occupied-en",
+      "scenario_id": "move-occupied",
+      "language": "en",
+      "instruction": "Move booking b001 to slot s2. If it is full, preserve the original booking and other customers' bookings, and report the result.",
+      "initial_state": {
+        "slots": {
+          "s1": {
+            "capacity": 2
+          },
+          "s2": {
+            "capacity": 1
+          },
+          "s3": {
+            "capacity": 1
+          }
+        },
+        "bookings": [
+          {
+            "id": "b001",
+            "customer_id": "c1",
+            "slot_id": "s1",
+            "status": "active"
+          },
+          {
+            "id": "b002",
+            "customer_id": "c2",
+            "slot_id": "s2",
+            "status": "active"
+          }
+        ]
+      },
+      "faults": [],
+      "requests": [
+        {
+          "tool": "move_booking",
+          "arguments": {
+            "booking_id": "b001",
+            "slot_id": "s2"
+          },
+          "operation_id": "op-1"
+        }
+      ],
+      "expected": {
+        "active_bookings": [
+          {
+            "customer_id": "c1",
+            "slot_id": "s1"
+          },
+          {
+            "customer_id": "c2",
+            "slot_id": "s2"
+          }
+        ],
+        "outcomes": [
+          "capacity"
+        ],
+        "required_bookings": [
+          {
+            "id": "b001",
+            "customer_id": "c1",
+            "slot_id": "s1",
+            "status": "active"
+          },
+          {
+            "id": "b002",
+            "customer_id": "c2",
+            "slot_id": "s2",
+            "status": "active"
+          }
+        ]
+      }
+    },
+    {
+      "id": "duplicate-delivery-ja",
+      "scenario_id": "duplicate-delivery",
+      "language": "ja",
+      "instruction": "同じ登録依頼が2回届いています。お客様c1のs1への予約は1件だけ登録し、両方の依頼に結果を返してください。",
+      "initial_state": {
+        "slots": {
+          "s1": {
+            "capacity": 2
+          },
+          "s2": {
+            "capacity": 1
+          },
+          "s3": {
+            "capacity": 1
+          }
+        },
+        "bookings": []
+      },
+      "faults": [],
+      "requests": [
+        {
+          "tool": "create_booking",
+          "arguments": {
+            "customer_id": "c1",
+            "slot_id": "s1"
+          },
+          "operation_id": "op-1"
+        },
+        {
+          "tool": "create_booking",
+          "arguments": {
+            "customer_id": "c1",
+            "slot_id": "s1"
+          },
+          "operation_id": "op-1"
+        }
+      ],
+      "expected": {
+        "active_bookings": [
+          {
+            "customer_id": "c1",
+            "slot_id": "s1"
+          }
+        ],
+        "outcomes": [
+          "ok",
+          "ok"
+        ]
+      }
+    },
+    {
+      "id": "duplicate-delivery-en",
+      "scenario_id": "duplicate-delivery",
+      "language": "en",
+      "instruction": "The same creation request was delivered twice. Create only one booking for customer c1 in slot s1 and return a result for both deliveries.",
+      "initial_state": {
+        "slots": {
+          "s1": {
+            "capacity": 2
+          },
+          "s2": {
+            "capacity": 1
+          },
+          "s3": {
+            "capacity": 1
+          }
+        },
+        "bookings": []
+      },
+      "faults": [],
+      "requests": [
+        {
+          "tool": "create_booking",
+          "arguments": {
+            "customer_id": "c1",
+            "slot_id": "s1"
+          },
+          "operation_id": "op-1"
+        },
+        {
+          "tool": "create_booking",
+          "arguments": {
+            "customer_id": "c1",
+            "slot_id": "s1"
+          },
+          "operation_id": "op-1"
+        }
+      ],
+      "expected": {
+        "active_bookings": [
+          {
+            "customer_id": "c1",
+            "slot_id": "s1"
+          }
+        ],
+        "outcomes": [
+          "ok",
+          "ok"
+        ]
+      }
+    }
+  ]
+}
