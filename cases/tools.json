@@ -1,0 +1,65 @@
+{
+  "description": "Provider-neutral public tool catalogue. Supply a public slot catalogue with capacities separately. No grader fields belong in an agent observation.",
+  "tools": [
+    {
+      "name": "create_booking",
+      "description": "Create a booking. Timeout may mean the write committed. Reuse the same idempotency key for retries of the same intent; a changed payload with a used key is rejected.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "customer_id": {"type": "string", "minLength": 1},
+          "slot_id": {"type": "string", "minLength": 1},
+          "idempotency_key": {"type": "string", "minLength": 1}
+        },
+        "required": ["customer_id", "slot_id"],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "cancel_booking",
+      "description": "Cancel an existing booking while preserving its record. Cancelling an already cancelled booking succeeds without changing state.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "booking_id": {"type": "string", "minLength": 1},
+          "idempotency_key": {"type": "string", "minLength": 1}
+        },
+        "required": ["booking_id"],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "move_booking",
+      "description": "Atomically move an active booking to another slot. Preserve its ID and old slot if the move fails. Timeout may hide a committed move.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "booking_id": {"type": "string", "minLength": 1},
+          "slot_id": {"type": "string", "minLength": 1},
+          "idempotency_key": {"type": "string", "minLength": 1}
+        },
+        "required": ["booking_id", "slot_id"],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "list_bookings",
+      "description": "Read booking records, including cancelled ones. With no customer filter, returns all synthetic booking records.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {"customer_id": {"type": "string", "minLength": 1}},
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "get_operation",
+      "description": "Read the original successful response for an idempotency key. not_found means no success is recorded for that key.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {"idempotency_key": {"type": "string", "minLength": 1}},
+        "required": ["idempotency_key"],
+        "additionalProperties": false
+      }
+    }
+  ]
+}
